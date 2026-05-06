@@ -242,8 +242,11 @@ tasks.named('runIde') {
     def stableBridge = layout.buildDirectory.dir("stable-ai-bridge").get().asFile
     if (stableBridge.exists()) {
         systemProperty 'claude.bridge.path', stableBridge.absolutePath
-    } else if (aiBridgeDir.exists() && new File(aiBridgeDir, 'node_modules').exists()) {
-        systemProperty 'claude.bridge.path', aiBridgeDir.absolutePath
+    } else {
+        def devBridge = file("ai-bridge")
+        if (devBridge.exists() && new File(devBridge, 'node_modules').exists()) {
+            systemProperty 'claude.bridge.path', devBridge.absolutePath
+        }
     }
 
     // Redirect standard output

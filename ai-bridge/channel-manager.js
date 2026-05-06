@@ -26,6 +26,9 @@
 import { readStdinData } from './utils/stdin-utils.js';
 import { handleClaudeCommand } from './channels/claude-channel.js';
 import { handleCodexCommand } from './channels/codex-channel.js';
+import { handleOpenClaudeCommand } from './channels/openclaude-channel.js';
+import { handleCrewAICommand } from './channels/crewai-channel.js';
+import { handleNineRouterCommand } from './channels/ninerouter-channel.js';
 import { getSdkStatus, isClaudeSdkAvailable, isCodexSdkAvailable } from './utils/sdk-loader.js';
 import { injectNetworkEnvVars, configureCliIdentity } from './config/api-config.js';
 
@@ -116,6 +119,9 @@ async function handleSystemCommand(command, args, stdinData) {
 const providerHandlers = {
   claude: handleClaudeCommand,
   codex: handleCodexCommand,
+  openclaude: handleOpenClaudeCommand,
+  crewai: handleCrewAICommand,
+  ninerouter: handleNineRouterCommand,
   system: handleSystemCommand
 };
 
@@ -126,7 +132,7 @@ const providerHandlers = {
     // Validate provider
     console.log('[DIAG-EXEC] Validating provider...');
     if (!provider || !providerHandlers[provider]) {
-      console.error('Invalid provider. Use "claude", "codex", or "system"');
+      console.error('Invalid provider. Use "claude", "codex", "openclaude", "crewai", "ninerouter", or "system"');
       console.log(JSON.stringify({
         success: false,
         error: 'Invalid provider: ' + provider

@@ -10,7 +10,14 @@
  */
 export async function readStdinData(provider = 'claude') {
   // Check whether stdin input is enabled
-  const envKey = provider === 'codex' ? 'CODEX_USE_STDIN' : 'CLAUDE_USE_STDIN';
+  const envKeys = {
+    claude: 'CLAUDE_USE_STDIN',
+    codex: 'CODEX_USE_STDIN',
+    openclaude: 'OPENCLAUDE_USE_STDIN',
+    crewai: 'CREWAI_USE_STDIN',
+    ninerouter: 'NINEROUTER_USE_STDIN'
+  };
+  const envKey = envKeys[provider] || `${provider.toUpperCase()}_USE_STDIN`;
   if (process.env[envKey] !== 'true') {
     return null;
   }

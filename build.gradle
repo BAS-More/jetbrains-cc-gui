@@ -37,8 +37,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 
     // Use Java Toolchain for consistent JDK across all tasks
+    // JDK 21 compiles to Java 17 bytecode via source/targetCompatibility above
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 

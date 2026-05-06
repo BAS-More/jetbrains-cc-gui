@@ -61,7 +61,7 @@ const AiFeatureProviderModelPanel = ({
             onChange={(e) => onProviderChange(e.target.value as AiFeatureProvider)}
             aria-label={t(`${settingsKeyPrefix}.label`)}
           >
-            {(['claude', 'codex'] as AiFeatureProvider[]).map((provider) => (
+            {(['claude', 'codex', 'openclaude', 'crewai'] as AiFeatureProvider[]).map((provider) => (
               <option key={provider} value={provider} disabled={!config.availability[provider]}>
                 {getProviderLabel(provider)}{!config.availability[provider] ? ` (${t(`${settingsKeyPrefix}.providerUnavailable`)})` : ''}
               </option>

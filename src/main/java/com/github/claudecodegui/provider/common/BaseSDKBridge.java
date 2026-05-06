@@ -365,6 +365,26 @@ public abstract class BaseSDKBridge {
     }
 
     /**
+     * Convenience overload that builds the command from an action string.
+     * Delegates to the 5-arg version with {@code null} for cwd.
+     *
+     * @param channelId Channel identifier
+     * @param action    The action to perform (e.g., "send")
+     * @param stdinJson JSON to write to stdin
+     * @param callback  Message callback
+     * @return CompletableFuture with the result
+     */
+    protected CompletableFuture<SDKResult> executeStreamingCommand(
+            String channelId,
+            String action,
+            String stdinJson,
+            MessageCallback callback
+    ) {
+        List<String> command = buildBaseCommand(action);
+        return executeStreamingCommand(channelId, command, stdinJson, null, callback);
+    }
+
+    /**
      * Build the base command for invoking channel-manager.js.
      *
      * @param action The action to perform (e.g., "send", "sendWithAttachments")

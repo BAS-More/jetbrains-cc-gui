@@ -6,6 +6,7 @@
  */
 
 import { existsSync, readFileSync } from 'fs';
+import { execSync } from 'child_process';
 import { join } from 'path';
 import { pathToFileURL } from 'url';
 import { getRealHomeDir, getCodemossDir } from './path-utils.js';
@@ -321,6 +322,19 @@ export async function loadBedrockSdk() {
 }
 
 /**
+ * Check whether the OpenClaude CLI (occ) is available on PATH.
+ */
+export function isOpenClaudeAvailable() {
+    const occBin = process.env.OCC_PATH || 'occ';
+    try {
+        execSync(`${occBin} --version`, { timeout: 3000, stdio: 'ignore' });
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+/**
  * Get the installation status of all SDKs
  */
 export function getSdkStatus() {
@@ -336,6 +350,18 @@ export function getSdkStatus() {
         codex: {
             installed: codexInstalled,
             path: getPackageDirFromRoot(getSdkRootDir('codex-sdk'), '@openai/codex-sdk')
+        },
+        openclaude: {
+            installed: isOpenClaudeAvailable(),
+            path: 'occ (CLI binary)'
+        },
+        crewai: {
+            installed: true, // HTTP bridge — always "installed", availability checked at runtime
+            path: process.env.CREWAI_BRIDGE_URL || 'http://localhost:8000'
+        },
+        ninerouter: {
+            installed: true, // HTTP service — always "installed", availability checked at runtime
+            path: `http://localhost:${process.env.NINE_ROUTER_PORT || 20128}`
         }
     };
 }

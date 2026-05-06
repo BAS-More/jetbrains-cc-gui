@@ -66,7 +66,8 @@ export function useModelProviderState({ addToast, t }: UseModelProviderStateOpti
   useEffect(() => { longContextEnabledRef.current = longContextEnabled; }, [longContextEnabled]);
 
   // Select the displayed model based on the current provider
-  const selectedModel = currentProvider === 'codex' ? selectedCodexModel : selectedClaudeModel;
+  const selectedModel = currentProvider === 'codex' ? selectedCodexModel
+    : selectedClaudeModel; // claude, openclaude, crewai all use the Claude model
 
   // Determine whether the SDK for the current provider is installed
   const currentSdkInstalled = useMemo(() => {
@@ -75,6 +76,8 @@ export function useModelProviderState({ addToast, t }: UseModelProviderStateOpti
       claude: 'claude-sdk',
       anthropic: 'claude-sdk',
       bedrock: 'claude-sdk',
+      openclaude: 'claude-sdk',
+      crewai: 'claude-sdk',
       codex: 'codex-sdk',
       openai: 'codex-sdk',
     };
@@ -113,7 +116,7 @@ export function useModelProviderState({ addToast, t }: UseModelProviderStateOpti
       if (saved) {
         const state = JSON.parse(saved);
 
-        if (['claude', 'codex'].includes(state.provider)) {
+        if (['claude', 'codex', 'openclaude', 'crewai'].includes(state.provider)) {
           restoredProvider = state.provider;
           setCurrentProvider(state.provider);
         }

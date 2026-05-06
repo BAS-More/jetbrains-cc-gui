@@ -12,9 +12,13 @@ export const DEFAULT_PROMPT_ENHANCER_CONFIG: PromptEnhancerConfig = {
   models: {
     claude: DEFAULT_AI_FEATURE_MODELS.claude,
     codex: DEFAULT_AI_FEATURE_MODELS.codex,
+    openclaude: DEFAULT_AI_FEATURE_MODELS.openclaude,
+    crewai: DEFAULT_AI_FEATURE_MODELS.crewai,
   },
   availability: {
     claude: false,
     codex: false,
+    openclaude: false,
+    crewai: false,
   },
 };

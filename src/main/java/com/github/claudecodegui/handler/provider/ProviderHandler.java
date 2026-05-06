@@ -6,7 +6,9 @@ import com.github.claudecodegui.handler.core.HandlerContext;
 /**
  * Provider management message handler.
  * Handles provider CRUD operations and switching.
- * Supports both Claude and Codex providers.
+ * Supports Claude and Codex providers (config-object-based).
+ * OpenClaude and CrewAI providers use environment variables for configuration
+ * and do not participate in this CRUD system.
  */
 public class ProviderHandler extends BaseMessageHandler {
 

@@ -50,6 +50,11 @@ public class ModelProviderHandler {
         MODEL_CONTEXT_LIMITS.put("o1", 200_000);
         MODEL_CONTEXT_LIMITS.put("o1-mini", 128_000);
         MODEL_CONTEXT_LIMITS.put("o1-preview", 128_000);
+
+        // OpenClaude models (via 9Router)
+        MODEL_CONTEXT_LIMITS.put("gemini-2.5-flash", 1_000_000);
+        MODEL_CONTEXT_LIMITS.put("gemini-2.5-pro", 1_000_000);
+        MODEL_CONTEXT_LIMITS.put("gemini-2.0-flash", 1_000_000);
     }
 
     private final HandlerContext context;
@@ -85,7 +90,15 @@ public class ModelProviderHandler {
 
             com.github.claudecodegui.notifications.ClaudeNotifier.setModel(context.getProject(), model);
 
-            String resolvedModelForUsage = resolveConfiguredClaudeModelFromSettings(model);
+            // Only resolve model via Claude settings env vars for Claude provider;
+            // OpenClaude and CrewAI use their own model naming and should not be
+            // overridden by ANTHROPIC_MODEL / ANTHROPIC_DEFAULT_*_MODEL env vars.
+            String currentProvider = context.getCurrentProvider();
+            boolean isClaudeProvider = currentProvider == null
+                    || "claude".equalsIgnoreCase(currentProvider);
+            String resolvedModelForUsage = isClaudeProvider
+                    ? resolveConfiguredClaudeModelFromSettings(model)
+                    : model;
             int newMaxTokens = getModelContextLimit(resolvedModelForUsage);
             LOG.info("[ModelProviderHandler] Model context limit: " + newMaxTokens
                     + " tokens for selected model: " + model
@@ -194,6 +207,11 @@ public class ModelProviderHandler {
         });
     }
 
+    /**
+     * Resolves the configured Claude model from ~/.claude/settings.json env vars.
+     * Only meaningful for the "claude" provider — other providers (codex, openclaude, crewai)
+     * have their own model naming and should not call this method.
+     */
     private String resolveConfiguredClaudeModelFromSettings(String baseModel) {
         try {
             JsonObject claudeSettings = context.getSettingsService().readClaudeSettings();

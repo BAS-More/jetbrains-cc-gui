@@ -116,6 +116,10 @@ public enum SdkDefinition {
     public static SdkDefinition fromProvider(String provider) {
         if ("claude".equalsIgnoreCase(provider)) {
             return CLAUDE_SDK;
+        } else if ("openclaude".equalsIgnoreCase(provider)) {
+            return CLAUDE_SDK;
+        } else if ("crewai".equalsIgnoreCase(provider)) {
+            return CLAUDE_SDK;
         } else if ("codex".equalsIgnoreCase(provider)) {
             return CODEX_SDK;
         }

@@ -6,6 +6,8 @@ import com.github.claudecodegui.settings.CodemossSettingsService;
 import com.github.claudecodegui.notifications.ClaudeNotifier;
 import com.github.claudecodegui.provider.claude.ClaudeSDKBridge;
 import com.github.claudecodegui.provider.codex.CodexSDKBridge;
+import com.github.claudecodegui.provider.openclaude.OpenClaudeSDKBridge;
+import com.github.claudecodegui.provider.crewai.CrewAISDKBridge;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.diagnostic.Logger;
@@ -29,6 +31,8 @@ public class SessionSendService {
     private final Gson gson;
     private final ClaudeSDKBridge claudeSDKBridge;
     private final CodexSDKBridge codexSDKBridge;
+    private final OpenClaudeSDKBridge openClaudeSDKBridge; // nullable
+    private final CrewAISDKBridge crewAISDKBridge; // nullable
     private final SessionContextService contextService;
 
     public SessionSendService(
@@ -40,6 +44,8 @@ public class SessionSendService {
             Gson gson,
             ClaudeSDKBridge claudeSDKBridge,
             CodexSDKBridge codexSDKBridge,
+            OpenClaudeSDKBridge openClaudeSDKBridge,
+            CrewAISDKBridge crewAISDKBridge,
             SessionContextService contextService
     ) {
         this.project = project;
@@ -50,6 +56,8 @@ public class SessionSendService {
         this.gson = gson;
         this.claudeSDKBridge = claudeSDKBridge;
         this.codexSDKBridge = codexSDKBridge;
+        this.openClaudeSDKBridge = openClaudeSDKBridge;
+        this.crewAISDKBridge = crewAISDKBridge;
         this.contextService = contextService;
     }
 
@@ -112,6 +120,14 @@ public class SessionSendService {
                         + ", effective=" + effectivePermissionMode
         );
 
+        if ("openclaude".equals(currentProvider)) {
+            return sendToOpenClaude(channelId, input, agentPrompt);
+        }
+
+        if ("crewai".equals(currentProvider)) {
+            return sendToCrewAI(channelId, input);
+        }
+
         if ("codex".equals(currentProvider)) {
             return sendToCodex(
                     channelId,
@@ -151,7 +167,8 @@ public class SessionSendService {
             resolvedMode = "default";
         }
 
-        if ("codex".equals(provider) && "plan".equals(resolvedMode)) {
+        if (("codex".equals(provider) || "openclaude".equals(provider) || "crewai".equals(provider))
+                && "plan".equals(resolvedMode)) {
             return "default";
         }
         return resolvedMode;
@@ -163,6 +180,53 @@ public class SessionSendService {
             return null;
         }
         return ClaudeCodeGuiBundle.message("error.codexLocalAccessNotAuthorized");
+    }
+
+    private CompletableFuture<Void> sendToOpenClaude(
+            String channelId,
+            String input,
+            String agentPrompt
+    ) {
+        ClaudeMessageHandler handler = new ClaudeMessageHandler(
+                project,
+                state,
+                callbackFacade.getCallbackHandler(),
+                messageParser,
+                messageMerger,
+                gson
+        );
+
+        return openClaudeSDKBridge.sendMessage(
+                channelId,
+                input,
+                state.getSessionId(),
+                state.getCwd(),
+                state.getModel(),
+                agentPrompt,
+                handler
+        ).thenApply(result -> null);
+    }
+
+    private CompletableFuture<Void> sendToCrewAI(
+            String channelId,
+            String input
+    ) {
+        ClaudeMessageHandler handler = new ClaudeMessageHandler(
+                project,
+                state,
+                callbackFacade.getCallbackHandler(),
+                messageParser,
+                messageMerger,
+                gson
+        );
+
+        return crewAISDKBridge.sendMessage(
+                channelId,
+                input,
+                null, // crewId — will be configurable later
+                state.getSessionId(),
+                handler
+        ).thenApply(result -> null);
     }
 
     private CompletableFuture<Void> sendToCodex(

@@ -7,6 +7,8 @@ import com.github.claudecodegui.handler.core.HandlerContext;
 import com.github.claudecodegui.handler.SettingsHandler;
 import com.github.claudecodegui.provider.claude.ClaudeSDKBridge;
 import com.github.claudecodegui.provider.codex.CodexSDKBridge;
+import com.github.claudecodegui.provider.crewai.CrewAISDKBridge;
+import com.github.claudecodegui.provider.openclaude.OpenClaudeSDKBridge;
 import com.github.claudecodegui.skill.SlashCommandRegistry;
 import com.github.claudecodegui.util.JsUtils;
 import com.github.claudecodegui.util.PlatformUtils;
@@ -40,6 +42,10 @@ public class SessionLifecycleManager {
         ClaudeSDKBridge getClaudeSDKBridge();
 
         CodexSDKBridge getCodexSDKBridge();
+
+        OpenClaudeSDKBridge getOpenClaudeSDKBridge();
+
+        CrewAISDKBridge getCrewAISDKBridge();
 
         ClaudeSession getSession();
 
@@ -111,7 +117,8 @@ public class SessionLifecycleManager {
             host.clearPermissionDecisionMemory();
 
             ClaudeSession newSession = new ClaudeSession(
-                    host.getProject(), host.getClaudeSDKBridge(), host.getCodexSDKBridge());
+                    host.getProject(), host.getClaudeSDKBridge(), host.getCodexSDKBridge(),
+                    host.getOpenClaudeSDKBridge(), host.getCrewAISDKBridge());
             newSession.setPermissionMode(previousPermissionMode);
             newSession.setProvider(previousProvider);
             newSession.setModel(previousModel);
@@ -195,7 +202,8 @@ public class SessionLifecycleManager {
             }
 
             ClaudeSession newSession = new ClaudeSession(
-                    host.getProject(), host.getClaudeSDKBridge(), host.getCodexSDKBridge());
+                    host.getProject(), host.getClaudeSDKBridge(), host.getCodexSDKBridge(),
+                    host.getOpenClaudeSDKBridge(), host.getCrewAISDKBridge());
             newSession.setPermissionMode(previousPermissionMode);
             newSession.setProvider(previousProvider);
             newSession.setModel(previousModel);

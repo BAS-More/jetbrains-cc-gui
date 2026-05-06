@@ -1297,6 +1297,15 @@
     },
     "opencode": {
       "label": "OpenCode"
+    },
+    "openclaude": {
+      "label": "OpenClaude"
+    },
+    "crewai": {
+      "label": "CrewAI"
+    },
+    "ninerouter": {
+      "label": "9Router"
     }
   },
   "promptEnhancer": {

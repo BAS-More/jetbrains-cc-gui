@@ -19,12 +19,14 @@
     min-width: 280px;
     max-width: 400px;
     box-shadow: var(--shadow-md);
-    animation: toast-slide-in 0.3s ease-out;
-    transition: all 0.3s ease-out;
+    animation: toast-slide-in 0.3s var(--ease-out);
+    /* 只过渡 transform 与 opacity —— 二者走 GPU，不触发布局 */
+    transition: transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
 }
 
+/* 退出时长需与 Toast.tsx 中 300ms 的卸载延迟保持一致 */
 .toast-exit {
-    animation: toast-slide-out 0.3s ease-out;
+    animation: toast-slide-out 0.3s var(--ease-out);
     opacity: 0;
     transform: translateX(100%);
 }
@@ -77,7 +79,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out);
     flex-shrink: 0;
 }
 

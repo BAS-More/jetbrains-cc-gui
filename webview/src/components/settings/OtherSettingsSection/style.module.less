@@ -659,3 +659,19 @@
     cursor: not-allowed;
   }
 }
+
+/* ==================== 减弱动效 (prefers-reduced-motion) ==================== */
+/* CSS Module 内的 @keyframes 名称会被哈希，styles/less/reduced-motion.less 的
+   全局覆盖命中不到，因此减弱版必须写在本文件内、且位于原定义之后。 */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

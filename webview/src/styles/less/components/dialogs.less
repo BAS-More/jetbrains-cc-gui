@@ -82,7 +82,7 @@
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .confirm-dialog-button.cancel-button {
@@ -162,7 +162,8 @@
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+        transform 0.16s var(--ease-out);
 
     &:active {
         transform: scale(0.98);

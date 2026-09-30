@@ -73,7 +73,7 @@
     color: var(--text-primary);
     font-size: 13px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 
 .scope-btn:hover {
@@ -96,7 +96,8 @@
     color: var(--text-primary);
     font-size: 13px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+        opacity 0.2s var(--ease-out);
 }
 
 .refresh-btn:hover {
@@ -128,7 +129,8 @@
     font-size: 13px;
     cursor: pointer;
     border-bottom: 2px solid transparent;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out),
+        border-bottom-color 0.2s var(--ease-out);
 }
 
 .tab-btn:hover {
@@ -188,7 +190,8 @@
     background: var(--bg-secondary);
     border: 1px solid var(--border-secondary);
     border-radius: 8px;
-    transition: all 0.2s;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out),
+        border-color 0.2s var(--ease-out);
 }
 
 .stat-card:hover {
@@ -286,7 +289,9 @@
 
 .token-segment {
     height: 100%;
-    transition: all 0.3s;
+    /* width 由数据驱动（内联样式），是这里唯一需要过渡的属性；
+       它会触发布局，但分段条无法用 transform 等价实现 */
+    transition: width 0.3s var(--ease-in-out);
     cursor: help;
 }
 
@@ -519,7 +524,7 @@
     background: var(--bg-secondary);
     border: 1px solid var(--border-secondary);
     border-radius: 6px;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .session-item:hover {
@@ -599,7 +604,8 @@
     background: var(--bg-secondary);
     color: var(--text-primary);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+        opacity 0.2s var(--ease-out);
 }
 
 .page-btn:hover:not(:disabled) {
@@ -666,7 +672,9 @@
     width: 100%;
     background: linear-gradient(180deg, var(--chart-gradient-start) 0%, var(--chart-gradient-end) 100%);
     border-radius: 4px 4px 0 0;
-    transition: all 0.2s;
+    /* height 由数据驱动（内联样式）；hover 只改 opacity / transform */
+    transition: height 0.2s var(--ease-in-out), opacity 0.2s var(--ease-out),
+        transform 0.2s var(--ease-out);
     cursor: help;
     min-height: 2px;
 }
@@ -717,7 +725,7 @@
     color: var(--text-tertiary);
     font-size: 12px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out);
     white-space: nowrap;
 }
 
@@ -769,7 +777,7 @@
     color: var(--text-tertiary);
     font-size: 12px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 
 .sort-btn:hover {

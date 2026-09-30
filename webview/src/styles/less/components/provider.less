@@ -32,7 +32,9 @@
     border: 1px solid var(--border-secondary);
     border-radius: 8px;
     padding: 20px;
-    transition: all 0.2s ease;
+    /* 刻意不过渡 padding / border-left-width —— .active 会改动二者，过渡会造成布局抖动 */
+    transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out),
+        transform 0.2s var(--ease-out), background 0.2s var(--ease-out);
     box-shadow: var(--shadow-sm);
 }
 

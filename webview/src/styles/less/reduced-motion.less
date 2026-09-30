@@ -1,0 +1,129 @@
+/* ==================== 减弱动效 (prefers-reduced-motion) ==================== */
+/* 原则：减弱动效 ≠ 关闭动效。
+   保留：透明度、颜色，以及加载/进度指示（spinner、省略号）—— 它们承载信息。
+   移除：位移与缩放等前庭刺激较强的运动。
+
+   本文件必须在 app.less 中最后 @import：
+   同名 @keyframes 以文档顺序最后一个为准，靠后才能覆盖组件内的原始定义。 */
+
+@media (prefers-reduced-motion: reduce) {
+
+    /* ---- 1. 位移类入场动画改为纯淡入，元素仍保留渐显反馈 ---- */
+    @keyframes slideIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideFromBottom {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes tooltipFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes toast-slide-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes toast-slide-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+
+    /* 锚点提示：translateY(-50%) 是垂直居中定位，必须保留；只去掉水平位移 */
+    @keyframes anchor-tooltip-fade-in {
+        from { opacity: 0; transform: translateY(-50%); }
+        to { opacity: 1; transform: translateY(-50%); }
+    }
+
+    /* .toast-exit 自身还有静态的 translateX(100%)，不中和会在退出瞬间横向跳走 */
+    .toast-exit {
+        transform: none;
+    }
+
+    /* ---- 1b. 组件目录内的位移动画（不经 app.less 导入，但同属全局命名空间） ----
+       这些关键帧的 transform 里混有定位量（translateX(-50%) 等），
+       减弱版必须保留终态定位，只去掉运动过程。 */
+    @keyframes tooltip-bar-fade-in {
+        from { opacity: 0; transform: translate(0, -100%); }
+        to { opacity: 1; transform: translate(0, -100%); }
+    }
+
+    @keyframes popover-fade-in {
+        from { opacity: 0; transform: translateY(0); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popover-slide-up {
+        from { opacity: 0; transform: translateY(0); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes dialog-slide-up {
+        from { opacity: 0; transform: translateY(0) scale(1); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* toast-fade 的 translateX(-50%) 是水平居中定位，必须保留 */
+    @keyframes toast-fade {
+        0% { opacity: 0; transform: translateX(-50%); }
+        15%, 85% { opacity: 1; transform: translateX(-50%); }
+        100% { opacity: 0; transform: translateX(-50%); }
+    }
+
+    /* ---- 2. 状态指示动画：保留透明度呼吸，去掉缩放 ---- */
+    @keyframes breathing {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    @keyframes thinking-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+
+    /* ---- 3. 装饰性 hover / press 位移与放大：取消 ---- */
+    .stat-card:hover,
+    .chart-bar:hover,
+    .provider-card:hover,
+    .sidebar-tool-item:hover,
+    .skill-card .toggle-switch:hover,
+    .btn-small:active,
+    .message-image-block.user-image:hover img,
+    .changelog-dot.active {
+        transform: none;
+    }
+
+    /* 锚点圆点：translate(-50%,-50%) 是定位，保留；只去掉 scale(1.3) */
+    .messages-anchor-dot:hover {
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* 未覆盖、需要单独处理的：
+   - components/ChatInputBox/styles/ 下的 tooltip-fade-in 在 context-bar.css 与 dropdown.css
+     中各定义了一份，同名但终态 transform 不同（前者 translate(var(--tooltip-tx), -100%)，
+     后者 translateX(-50%)）。全局命名空间下二者本就互相覆盖（后加载者胜），
+     写单一减弱版会固化其中一种。应先重命名消歧，再补减弱版。
+   - CSS Module 内的关键帧（如 OtherSettingsSection 的 slideIn）名称会被哈希，
+     全局覆盖无法命中，减弱版写在各自 .module.less 文件末尾。 */
+
+/* 刻意保留、未被上面中和的动效：
+   - spin / waiting-spin / dots —— 加载与进度指示；移除后用户无从判断系统是否在工作
+   - :active 上的 scale(0.97) —— 3% 的按压反馈，位移量极小且是直接操作确认
+   - fadeIn / scrollControlFadeIn —— 本就只有透明度变化
+   - .token-segment 的 width、.chart-bar 的 height —— 数据驱动，属于信息而非装饰 */
